@@ -1,9 +1,8 @@
 import { fromHono } from "chanfana";
 import { Hono } from "hono";
-import { TaskList } from "./endpoints/tasks/router"; // Importa la CLASE directamente
+import { TaskList } from "./endpoints/tasks/router"; // Importamos la CLASE
 import { DummyEndpoint } from "./endpoints/dummyEndpoint";
 
-// 1. DECLARACIÓN ÚNICA DE APP
 const app = new Hono();
 
 // 2. MIDDLEWARE DE SEGURIDAD
@@ -23,7 +22,6 @@ app.use("*", async (c, next) => {
   );
 });
 
-// 3. SETUP OPENAPI
 const openapi = fromHono(app, {
   docs_url: "/",
   schema: {
@@ -31,13 +29,18 @@ const openapi = fromHono(app, {
     info: {
       title: "Task Management API",
       version: "1.0.0",
+      description: "API para gestión de tareas 🚀",
     },
   },
 });
 
-
-openapi.get("/tasks", TaskList); 
-openapi.post("/dummy/:slug", DummyEndpoint);
+// 1. Health check
 openapi.get("/health", (c) => c.json({ status: "ok" }));
+
+// 2. Tareas (Registrada directamente)
+openapi.get("/tasks", TaskList);
+
+// 3. Dummy (Registrada directamente)
+openapi.post("/dummy/:slug", DummyEndpoint);
 
 export default app;

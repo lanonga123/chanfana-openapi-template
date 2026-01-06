@@ -1,5 +1,4 @@
 import { OpenAPIRoute } from "chanfana";
-import { Hono } from "hono";
 import { z } from "zod";
 
 const TaskSchema = z.object({
@@ -8,6 +7,7 @@ const TaskSchema = z.object({
   completed: z.boolean(),
 });
 
+// Exportamos solo la clase
 export class TaskList extends OpenAPIRoute {
   schema = {
     tags: ["Tasks"],
@@ -30,8 +30,3 @@ export class TaskList extends OpenAPIRoute {
     };
   }
 }
-
-// Exportamos un Hono limpio
-export const tasksRouter = new Hono();
-// No usamos fromHono aquí para evitar el error de 'parent'
-tasksRouter.get("/", (c) => new TaskList(c.req as any, c.env).handle()); 
