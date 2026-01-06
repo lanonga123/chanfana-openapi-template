@@ -7,24 +7,6 @@ import { TaskDelete } from "./endpoints/tasks/taskDelete";
 
 const app = new Hono();
 
-// --- MIDDLEWARE DE SEGURIDAD REFORZADO ---
-app.use("*", async (c, next) => {
-  await next();
-  
-  // Clonamos la respuesta y añadimos los headers de forma atómica
-  const response = new Response(c.res.body, c.res);
-  response.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
-  response.headers.set("X-Frame-Options", "SAMEORIGIN");
-  response.headers.set("X-Content-Type-Options", "nosniff");
-  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-  response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
-  // CSP que permite el funcionamiento de Swagger UI
-  response.headers.set("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https://fastly.jsdelivr.net;");
-  
-  c.res = response;
-});
-// -----------------------------------------
-
 const openapi = fromHono(app, {
   docs_url: "/",
   schema: {
@@ -41,4 +23,21 @@ openapi.post("/tasks", TaskCreate);
 openapi.put("/tasks/:slug", TaskUpdate);
 openapi.delete("/tasks/:slug", TaskDelete);
 
-export default app;
+// --- ESTE ES EL TRUCO FINAL ---
+export default {
+  async fetch(request: Request, env: any, ctx: any) {
+    const response = await app.fetch(request, env, ctx);
+    
+    // Creamos una nueva respuesta basada en la original pero con los headers forzados
+    const secureResponse = new Response(response.body, response);
+    
+    secureResponse.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+    secureResponse.headers.set("X-Frame-Options", "SAMEORIGIN");
+    secureResponse.headers.set("X-Content-Type-Options", "nosniff");
+    secureResponse.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+    secureResponse.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+    secureResponse.headers.set("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https://fastly.jsdelivr.net;");
+    
+    return secureResponse;
+  },
+};
