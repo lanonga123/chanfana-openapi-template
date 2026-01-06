@@ -1,11 +1,11 @@
 import { fromHono } from "chanfana";
 import { Hono } from "hono";
-import { TaskList } from "./endpoints/tasks/router"; // Importamos la clase directamente
-import { DummyEndpoint } from "./endpoints/dummyEndpoint";
+import { TaskList } from "./endpoints/tasks/router"; 
+import { DummyEndpoint } from "./endpoints/dummyEndpoint"; 
 
 const app = new Hono();
 
-// === SEGURIDAD A+ (Tu Hash) ===
+// --- SEGURIDAD GRADO A+ ---
 app.use("*", async (c, next) => {
   await next();
   c.header("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
@@ -18,32 +18,26 @@ app.use("*", async (c, next) => {
     "default-src 'self'; " +
     "script-src 'self' https://cdn.jsdelivr.net 'sha256-k50uV4UJTsLb556/ssV/UqPtQnzt3a3VxHTxwJ0rxYo='; " + 
     "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " + 
-    "img-src 'self' data: https://aegistechmx.github.io https://raw.githubusercontent.com; " +
-    "font-src 'self' https://cdn.jsdelivr.net; " +
+    "img-src 'self' data: https://aegistechmx.github.io https://raw.githubusercontent.com; " + 
+    "font-src 'self' https://cdn.jsdelivr.net; " + 
     "connect-src 'self';"
   );
 });
 
-// === CONFIGURACIÓN OPENAPI ===
 const openapi = fromHono(app, {
   docs_url: "/",
   schema: {
     openapi: "3.0.0",
     info: {
-      title: "Task Management API",
+      title: "AegisTech API",
       version: "1.0.0",
-      description: "![Logo](https://aegistechmx.github.io/images/logo-aegistech-dark.png)\n\n API Segura AegisTech 🚀",
+      description: "![Logo](https://aegistechmx.github.io/images/logo-aegistech-dark.png)\n\n Infraestructura Segura",
     },
   },
 });
 
-// === REGISTRO DIRECTO DE ENDPOINTS (Evita error basePath) ===
-openapi.get("/tasks", TaskList); // Registro directo
+// --- REGISTRO DIRECTO (Para evitar el error de Cloudflare) ---
+openapi.get("/tasks", TaskList);
 openapi.post("/dummy/:slug", DummyEndpoint);
-
-// Ruta manual para el JSON por si falla la auto-generación
-app.get("/openapi.json", (c) => {
-  return c.json(openapi.getSchema());
-});
 
 export default app;
