@@ -1,56 +1,64 @@
 import { fromHono } from "chanfana";
 import { Hono } from "hono";
-import { TaskList } from "./endpoints/tasks/router";
-import { DummyEndpoint } from "./endpoints/dummyEndpoint";
 
+// Inicia la app Hono
 const app = new Hono();
 
-// === 1. MIDDLEWARE DE SEGURIDAD (HEATERS / HEADERS) ===
+// === MIDDLEWARE DE SEGURIDAD ===
 app.use("*", async (c, next) => {
   await next();
 
-  // Cabeceras de seguridad estándar
+  // Cabeceras de seguridad
   c.header("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
   c.header("X-Frame-Options", "SAMEORIGIN");
   c.header("X-Content-Type-Options", "nosniff");
   c.header("Referrer-Policy", "strict-origin-when-cross-origin");
   
-  // CSP: Permite Swagger UI de CDN, Logo de GitHub y Fetch interno al JSON
+  // CSP para Swagger UI
   c.header(
     "Content-Security-Policy",
-    "default-src 'self'; " +
+    "default-src 'self' https://cdn.jsdelivr.net; " +
     "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
     "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
     "img-src 'self' data: https://aegistechmx.github.io; " +
-    "connect-src 'self'; " + // Vital para cargar /openapi.json
     "font-src 'self' https://cdn.jsdelivr.net;"
   );
-
-  // CORS básico
-  c.header("Access-Control-Allow-Origin", "*");
 });
 
-// === 2. CONFIGURACIÓN DE OPENAPI CON CHANFANA ===
+// === SETUP OPENAPI ===
 const openapi = fromHono(app, {
-  docs_url: "/", // Swagger UI en la raíz
+  docs_url: "/",
   schema: {
     openapi: "3.0.0",
     info: {
-      title: "AegisTech Task API",
+      title: "Task Management API",
       version: "1.0.0",
-      description: "API de gestión de tareas corregida 2026 🚀",
+      description: "API para gestión de tareas 🚀",
       "x-logo": {
-        url: "aegistechmx.github.io",
+        url: "https://aegistechmx.github.io/images/logo-aegistech-dark.png",
         altText: "AegisTechMX",
         backgroundColor: "#0a0a0a"
       },
     },
+    tags: [
+      { name: "Tasks", description: "Operaciones con tareas" },
+      { name: "System", description: "Endpoints del sistema" }
+    ]
   },
 });
 
-// === 3. REGISTRO PLANO (Elimina el Error 500 de 'parent') ===
-openapi.get("/health", (c) => c.json({ status: "ok", timestamp: new Date().toISOString() }));
-openapi.get("/tasks", TaskList);
+// === HEALTH CHECK ===
+openapi.get("/health", (c) => {
+  return c.json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
+// === IMPORTAR Y REGISTRAR ENDPOINTS ===
+import { tasksRouter } from "./endpoints/tasks/router";
+import { DummyEndpoint } from "./endpoints/dummyEndpoint";
+
+// Registrar endpoints
+openapi.route("/tasks", tasksRouter);
 openapi.post("/dummy/:slug", DummyEndpoint);
 
-export default app;
+// === EXPORTAR ===
+export default openapi.router;
