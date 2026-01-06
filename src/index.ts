@@ -2,6 +2,9 @@ import { fromHono } from "chanfana";
 import { Hono } from "hono";
 import { TaskList } from "./endpoints/tasks/router"; 
 import { DummyEndpoint } from "./endpoints/dummyEndpoint"; 
+import { TaskUpdate } from "./endpoints/tasks/update";
+import { TaskDelete } from "./endpoints/tasks/delete";
+import { TaskCreate } from "./endpoints/tasks/create"; // El que te pasé antes
 
 const app = new Hono();
 
@@ -39,6 +42,8 @@ const openapi = fromHono(app, {
 
 // REGISTRO PLANO (Sin sub-routers)
 openapi.get("/tasks", TaskList);
-openapi.post("/dummy/:slug", DummyEndpoint);
+openapi.post("/tasks", TaskCreate);
+openapi.put("/tasks/:slug", TaskUpdate);
+openapi.delete("/tasks/:slug", TaskDelete);
 
 export default app;
