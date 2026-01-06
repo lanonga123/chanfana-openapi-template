@@ -1,27 +1,28 @@
 import { fromHono } from "chanfana";
 import { Hono } from "hono";
+import { tasksRouter } from "./endpoints/tasks/router";
+import { DummyEndpoint } from "./endpoints/dummyEndpoint";
 
-// Inicia la app Hono
 const app = new Hono();
 
-// === MIDDLEWARE DE SEGURIDAD ===
+// === CONFIGURACIÓN DE SEGURIDAD (Mantiene tu A+) ===
 app.use("*", async (c, next) => {
   await next();
-
-  // Cabeceras de seguridad
   c.header("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
   c.header("X-Frame-Options", "SAMEORIGIN");
   c.header("X-Content-Type-Options", "nosniff");
   c.header("Referrer-Policy", "strict-origin-when-cross-origin");
+  c.header("Permissions-Policy", "camera=(), microphone=(), geolocation=()"); // Añadido para reforzar el A+
   
-  // CSP para Swagger UI
+  // CSP optimizado para Swagger y tu Logo
   c.header(
     "Content-Security-Policy",
-    "default-src 'self' https://cdn.jsdelivr.net; " +
+    "default-src 'self'; " +
     "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
     "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
-    "img-src 'self' data: https://aegistechmx.github.io; " +
-    "font-src 'self' https://cdn.jsdelivr.net;"
+    "img-src 'self' data: https://aegistechmx.github.io https://raw.githubusercontent.com; " +
+    "font-src 'self' https://cdn.jsdelivr.net; " +
+    "connect-src 'self';" // Crucial para evitar el error de carga del JSON
   );
 });
 
@@ -33,32 +34,19 @@ const openapi = fromHono(app, {
     info: {
       title: "Task Management API",
       version: "1.0.0",
-      description: "API para gestión de tareas 🚀",
-      "x-logo": {
-        url: "https://aegistechmx.github.io/images/logo-aegistech-dark.png",
-        altText: "AegisTechMX",
-        backgroundColor: "#0a0a0a"
-      },
+      description: "![Logo](https://aegistechmx.github.io/images/logo-aegistech-dark.png)\n\n API de Gestión de Tareas con seguridad de grado bancario 🚀",
     },
-    tags: [
-      { name: "Tasks", description: "Operaciones con tareas" },
-      { name: "System", description: "Endpoints del sistema" }
-    ]
   },
 });
 
-// === HEALTH CHECK ===
-openapi.get("/health", (c) => {
-  return c.json({ status: "ok", timestamp: new Date().toISOString() });
-});
-
-// === IMPORTAR Y REGISTRAR ENDPOINTS ===
-import { tasksRouter } from "./endpoints/tasks/router";
-import { DummyEndpoint } from "./endpoints/dummyEndpoint";
-
-// Registrar endpoints
+// Registrar Endpoints
 openapi.route("/tasks", tasksRouter);
 openapi.post("/dummy/:slug", DummyEndpoint);
 
-// === EXPORTAR ===
-export default openapi.router;
+// === RUTA CRÍTICA PARA ELIMINAR EL ERROR 500 ===
+// Usamos app.get para asegurar que el JSON se sirva siempre
+app.get("/openapi.json", (c) => {
+  return c.json(openapi.getSchema());
+});
+
+export default app;
