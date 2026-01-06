@@ -1,11 +1,6 @@
 import { fromHono } from "chanfana";
 import { Hono } from "hono";
-
-// Importaciones con nombres de archivo en MINÚSCULAS
 import { TaskRead } from "./endpoints/tasks/taskRead";
-import { TaskCreate } from "./endpoints/tasks/taskCreate";
-import { TaskUpdate } from "./endpoints/tasks/taskUpdate";
-import { TaskDelete } from "./endpoints/tasks/taskDelete";
 
 const app = new Hono();
 
@@ -20,10 +15,7 @@ const openapi = fromHono(app, {
   },
 });
 
-// Registro de rutas
+// SOLO ESTA RUTA ACTIVA
 openapi.get("/tasks", TaskRead);
-openapi.post("/tasks", TaskCreate);
-openapi.put("/tasks/:slug", TaskUpdate);
-openapi.delete("/tasks/:slug", TaskDelete);
 
 export default app;
