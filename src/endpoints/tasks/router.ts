@@ -8,7 +8,6 @@ const TaskSchema = z.object({
   completed: z.boolean(),
 });
 
-// Definición de clase limpia
 export class TaskList extends OpenAPIRoute {
   schema = {
     tags: ["Tasks"],
@@ -32,10 +31,12 @@ export class TaskList extends OpenAPIRoute {
   }
 }
 
-// Registramos los endpoints en este router local
-// No es estrictamente necesario usar fromHono aquí si el router se registra con openapi.route en el index
-// pero ayuda a mantener el tipado local.
-const tasksOpenapi = fromHono(tasks);
-tasksOpenapi.get("/", TaskList);
+// --- CORRECCIÓN AQUÍ ---
+const tasksRouterBase = new Hono();
+const openapi = fromHono(tasksRouterBase);
 
-export const tasksRouter = tasks;
+// Asegúrate de usar el nombre correcto de la variable (openapi)
+openapi.get("/", TaskList);
+
+// Exportamos el router de Hono
+export const tasksRouter = tasksRouterBase;
