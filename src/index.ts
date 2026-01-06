@@ -7,6 +7,7 @@ import { TaskDelete } from "./endpoints/tasks/taskDelete";
 
 const app = new Hono();
 
+// Configuración base de OpenAPI
 const openapi = fromHono(app, {
   docs_url: "/",
   schema: {
@@ -18,7 +19,7 @@ const openapi = fromHono(app, {
   },
 });
 
-// Rutas definitivas
+// Registro de rutas (Asegúrate de que estas clases existan en sus archivos)
 openapi.get("/tasks", TaskRead);
 openapi.post("/tasks", TaskCreate);
 openapi.put("/tasks/:slug", TaskUpdate);
