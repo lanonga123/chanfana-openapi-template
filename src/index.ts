@@ -1,6 +1,5 @@
 import { fromHono } from "chanfana";
 import { Hono } from "hono";
-import { z } from "zod";
 
 // Inicia la app Hono
 const app = new Hono();
@@ -51,30 +50,15 @@ const openapi = fromHono(app, {
 // === HEALTH CHECK ===
 openapi.get("/health", (c) => {
   return c.json({ status: "ok", timestamp: new Date().toISOString() });
-}, {
-  responses: {
-    200: {
-      description: "Health check",
-      content: {
-        "application/json": {
-          schema: z.object({
-            status: z.string(),
-            timestamp: z.string()
-          })
-        }
-      }
-    },
-  },
-  tags: ["System"],
 });
 
 // === IMPORTAR Y REGISTRAR ENDPOINTS ===
-import * as taskEndpoints from "./endpoints/tasks/router";
-import * as dummyEndpoint from "./endpoints/dummyEndpoint";
+import { tasksRouter } from "./endpoints/tasks/router";
+import { DummyEndpoint } from "./endpoints/dummyEndpoint";
 
 // Registrar endpoints
-openapi.route("/tasks", taskEndpoints.tasksRouter);
-openapi.post("/dummy/:slug", dummyEndpoint.DummyEndpoint);
+openapi.route("/tasks", tasksRouter);
+openapi.post("/dummy/:slug", DummyEndpoint);
 
 // === EXPORTAR ===
 export default openapi.router;
