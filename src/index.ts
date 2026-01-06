@@ -36,7 +36,7 @@ export default {
     secureResponse.headers.set("X-Content-Type-Options", "nosniff");
     secureResponse.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
     secureResponse.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
-    secureResponse.headers.set("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https://fastly.jsdelivr.net;");
+    response.headers.set("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https://fastly.jsdelivr.net; connect-src 'self' https://chanfana-openapi-template.bicf00.workers.dev;");
     
     return secureResponse;
   },
