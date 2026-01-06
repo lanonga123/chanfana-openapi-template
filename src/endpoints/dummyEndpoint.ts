@@ -1,7 +1,7 @@
-import { createEndpoint } from "chanfana";
+import { CreateEndpoint } from "chanfana";
 import { z } from "zod";
 
-export const DummyEndpoint = createEndpoint({
+export const DummyEndpoint = CreateEndpoint({
   method: "post" as const,
   path: "/dummy/:slug",
   request: {

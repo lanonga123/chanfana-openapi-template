@@ -1,4 +1,4 @@
-import { fromHono, createEndpoint } from "chanfana";
+import { fromHono } from "chanfana";
 import { Hono } from "hono";
 import { z } from "zod";
 
@@ -69,11 +69,10 @@ openapi.get("/health", (c) => {
 });
 
 // === IMPORTAR Y REGISTRAR ENDPOINTS ===
-// Importa directamente los handlers, no las clases
 import * as taskEndpoints from "./endpoints/tasks/router";
 import * as dummyEndpoint from "./endpoints/dummyEndpoint";
 
-// Registrar endpoints usando createEndpoint
+// Registrar endpoints
 openapi.route("/tasks", taskEndpoints.tasksRouter);
 openapi.post("/dummy/:slug", dummyEndpoint.DummyEndpoint);
 

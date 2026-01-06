@@ -1,4 +1,4 @@
-import { createEndpoint } from "chanfana";
+import { CreateEndpoint } from "chanfana";
 import { Hono } from "hono";
 import { z } from "zod";
 
@@ -10,7 +10,7 @@ const TaskSchema = z.object({
 });
 
 // Task List
-const TaskList = createEndpoint({
+const TaskList = CreateEndpoint({
   method: "get" as const,
   path: "/",
   responses: {
@@ -33,7 +33,7 @@ const TaskList = createEndpoint({
 });
 
 // Task Create
-const TaskCreate = createEndpoint({
+const TaskCreate = CreateEndpoint({
   method: "post" as const,
   path: "/",
   request: {
@@ -60,7 +60,7 @@ const TaskCreate = createEndpoint({
 });
 
 // Task Read
-const TaskRead = createEndpoint({
+const TaskRead = CreateEndpoint({
   method: "get" as const,
   path: "/:id",
   request: {
@@ -92,7 +92,7 @@ const TaskRead = createEndpoint({
 });
 
 // Task Update
-const TaskUpdate = createEndpoint({
+const TaskUpdate = CreateEndpoint({
   method: "put" as const,
   path: "/:id",
   request: {
@@ -124,7 +124,7 @@ const TaskUpdate = createEndpoint({
 });
 
 // Task Delete
-const TaskDelete = createEndpoint({
+const TaskDelete = CreateEndpoint({
   method: "delete" as const,
   path: "/:id",
   request: {
