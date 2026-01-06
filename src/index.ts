@@ -61,7 +61,7 @@ app.onError((err, c) => {
       version: "2.0.0",
       description: "API segura con hardening completo y estándares enterprise",
       "x-logo": {
-        url: "https://aegistechmx.github.io/imagess/logo.png",
+        url: "https://raw.githubusercontent.com/aegistechmx/aegistechmx.github.io/main/images/logo-aegistech-dark.png",
         altText: "AegisTechMX",
         backgroundColor: "#0b0f1a"
       }
@@ -76,3 +76,5 @@ app.onError((err, c) => {
 
 // === EXPORT ===
 export default app;
+description: "Ciberseguridad con Cloudflare Workers 🐔💪 🚀"
+
