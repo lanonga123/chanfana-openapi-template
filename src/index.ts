@@ -5,37 +5,35 @@ import { DummyEndpoint } from "./endpoints/dummyEndpoint";
 
 const app = new Hono();
 
-// === MIDDLEWARE DE SEGURIDAD (Headers / Heaters) ===
+// === SEGURIDAD Y HEADERS (HEATERS) ===
 app.use("*", async (c, next) => {
   await next();
-
-  // Cabeceras de seguridad estándar
   c.header("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
   c.header("X-Frame-Options", "SAMEORIGIN");
   c.header("X-Content-Type-Options", "nosniff");
   c.header("Referrer-Policy", "strict-origin-when-cross-origin");
   
-  // CSP corregido para permitir Swagger UI, Logo y Fetch interno
+  // CSP optimizado: permite Swagger, Logo de GitHub y Fetch interno
   c.header(
     "Content-Security-Policy",
     "default-src 'self'; " +
     "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
     "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
     "img-src 'self' data: https://aegistechmx.github.io; " +
-    "connect-src 'self'; " + // Vital para cargar openapi.json
+    "connect-src 'self'; " + 
     "font-src 'self' https://cdn.jsdelivr.net;"
   );
 });
 
-// === CONFIGURACIÓN DE CHANFANA (OpenAPI) ===
+// === CONFIGURACIÓN OPENAPI CON CHANFANA ===
 const openapi = fromHono(app, {
-  docs_url: "/", // Swagger UI en la raíz
+  docs_url: "/",
   schema: {
     openapi: "3.0.0",
     info: {
       title: "AegisTech Task API",
       version: "1.0.0",
-      description: "Gestión de tareas con Cloudflare Workers y D1 🚀",
+      description: "Gestión de tareas 🚀",
       "x-logo": {
         url: "aegistechmx.github.io",
         altText: "AegisTechMX",
@@ -45,9 +43,8 @@ const openapi = fromHono(app, {
   },
 });
 
-// === REGISTRO PLANO DE ENDPOINTS ===
-// Usar openapi.get/post directamente evita el error 500 de 'parent'
-openapi.get("/health", (c) => c.json({ status: "ok", time: new Date().toISOString() }));
+// === REGISTRO DE RUTAS (Modo Plano para evitar Error 500) ===
+openapi.get("/health", (c) => c.json({ status: "ok", date: new Date().toISOString() }));
 openapi.get("/tasks", TaskList);
 openapi.post("/dummy/:slug", DummyEndpoint);
 
