@@ -65,7 +65,7 @@ app.onError((err, c) => {
       "x-logo": {
         url: "https://raw.githubusercontent.com/aegistechmx/aegistechmx.github.io/main/images/logo-aegistech-dark.png",
         altText: "AegisTechMX",
-      },
+      }
     },
   },
 });
