@@ -57,18 +57,17 @@ app.onError((err, c) => {
   docs_url: "/",
   schema: {
     info: {
-      title: "AegisTechMX Secure API",
+      title: "Mi API Segura Pro",
       version: "2.0.0",
-      description: "API segura con hardening completo y estándares enterprise",
+      description: "Ciberseguridad con Cloudflare Workers 🐔💪",
       "x-logo": {
         url: "https://raw.githubusercontent.com/aegistechmx/aegistechmx.github.io/main/images/logo-aegistech-dark.png",
         altText: "AegisTechMX",
       },
-        backgroundColor: "#0b0f1a"
-      }
     },
   },
 });
+
 
 
 // === RUTAS ===
