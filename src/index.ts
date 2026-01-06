@@ -19,14 +19,16 @@ app.use("*", async (c, next) => {
   c.header("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
 
   // CSP ajustada para Swagger UI (necesita 'unsafe-inline' y 'unsafe-eval' por ahora)
-  c.header("Content-Security-Policy",
+  c.header(
+  "Content-Security-Policy",
   "default-src 'self'; " +
   "script-src 'self'; " +
   "style-src 'self'; " +
-  "img-src 'self' data: https://aegistechmx.github.io; "
+  "img-src 'self' data: https://raw.githubusercontent.com; " +
   "frame-ancestors 'self'; " +
   "upgrade-insecure-requests"
 );
+
 
   // Upcoming headers (nivel experto)
   c.header("Cross-Origin-Embedder-Policy", "require-corp");
