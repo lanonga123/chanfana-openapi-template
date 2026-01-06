@@ -23,21 +23,26 @@ openapi.post("/tasks", TaskCreate);
 openapi.put("/tasks/:slug", TaskUpdate);
 openapi.delete("/tasks/:slug", TaskDelete);
 
-// --- ESTE ES EL TRUCO FINAL ---
 export default {
   async fetch(request: Request, env: any, ctx: any) {
     const response = await app.fetch(request, env, ctx);
     
-    // Creamos una nueva respuesta basada en la original pero con los headers forzados
-    const secureResponse = new Response(response.body, response);
+    // Creamos una nueva respuesta para inyectar headers de seguridad grado A
+    const newHeaders = new Headers(response.headers);
     
-    secureResponse.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
-    secureResponse.headers.set("X-Frame-Options", "SAMEORIGIN");
-    secureResponse.headers.set("X-Content-Type-Options", "nosniff");
-    secureResponse.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-    secureResponse.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
-    response.headers.set("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https://fastly.jsdelivr.net; connect-src 'self' https://chanfana-openapi-template.bicf00.workers.dev;");
+    newHeaders.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+    newHeaders.set("X-Frame-Options", "SAMEORIGIN");
+    newHeaders.set("X-Content-Type-Options", "nosniff");
+    newHeaders.set("Referrer-Policy", "strict-origin-when-cross-origin");
+    newHeaders.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
     
-    return secureResponse;
+    // CSP Ajustado: Permite que Swagger cargue el JSON desde cualquier parte del mismo dominio
+    newHeaders.set("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https://fastly.jsdelivr.net; connect-src 'self' *;");
+
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: newHeaders,
+    });
   },
 };
