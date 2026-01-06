@@ -13,7 +13,7 @@ export class TaskList extends OpenAPIRoute {
     summary: "Listar todas las tareas",
     responses: {
       "200": {
-        description: "Éxito",
+        description: "Lista de tareas",
         content: {
           "application/json": {
             schema: z.object({
@@ -27,7 +27,9 @@ export class TaskList extends OpenAPIRoute {
 
   async handle() {
     return {
-      tasks: [{ id: "1", title: "Configuración inicial completa", completed: true }],
+      tasks: [
+        { id: "1", title: "API desplegada con éxito", completed: true },
+      ],
     };
   }
 }
