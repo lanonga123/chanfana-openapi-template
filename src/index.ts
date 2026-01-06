@@ -19,14 +19,16 @@ app.use("*", async (c, next) => {
   c.header("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
 
   // CSP ajustada para Swagger UI (necesita 'unsafe-inline' y 'unsafe-eval' por ahora)
-  c.header("Content-Security-Policy",
+  c.header(
+  "Content-Security-Policy",
   "default-src 'self'; " +
   "script-src 'self'; " +
   "style-src 'self'; " +
-  "img-src 'self' data: https://aegistechmx.github.io; " +
+  "img-src 'self' data: https://raw.githubusercontent.com; " +
   "frame-ancestors 'self'; " +
   "upgrade-insecure-requests"
 );
+
 
   // Upcoming headers (nivel experto)
   c.header("Cross-Origin-Embedder-Policy", "require-corp");
@@ -57,17 +59,17 @@ app.onError((err, c) => {
   docs_url: "/",
   schema: {
     info: {
-      title: "AegisTechMX Secure API",
+      title: "Mi API Segura Pro",
       version: "2.0.0",
-      description: "API segura con hardening completo y estándares enterprise",
+      description: "Ciberseguridad con Cloudflare Workers 🐔💪",
       "x-logo": {
         url: "https://raw.githubusercontent.com/aegistechmx/aegistechmx.github.io/main/images/logo-aegistech-dark.png",
         altText: "AegisTechMX",
-        backgroundColor: "#0b0f1a"
       }
     },
   },
 });
+
 
 
 // === RUTAS ===
