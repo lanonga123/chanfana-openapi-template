@@ -1,5 +1,7 @@
 import { fromHono } from "chanfana";
 import { Hono } from "hono";
+
+// Importaciones con nombres de archivo en MINÚSCULAS
 import { TaskRead } from "./endpoints/tasks/taskRead";
 import { TaskCreate } from "./endpoints/tasks/taskCreate";
 import { TaskUpdate } from "./endpoints/tasks/taskUpdate";
@@ -7,7 +9,6 @@ import { TaskDelete } from "./endpoints/tasks/taskDelete";
 
 const app = new Hono();
 
-// Configuración base de OpenAPI
 const openapi = fromHono(app, {
   docs_url: "/",
   schema: {
@@ -19,7 +20,7 @@ const openapi = fromHono(app, {
   },
 });
 
-// Registro de rutas (Asegúrate de que estas clases existan en sus archivos)
+// Registro de rutas
 openapi.get("/tasks", TaskRead);
 openapi.post("/tasks", TaskCreate);
 openapi.put("/tasks/:slug", TaskUpdate);
