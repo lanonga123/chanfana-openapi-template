@@ -13,6 +13,8 @@ app.use("*", async (c, next) => {
   c.header("X-Content-Type-Options", "nosniff");
   c.header("Referrer-Policy", "strict-origin-when-cross-origin");
   c.header("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  
+  // Actualizado connect-src para permitir los mapas de Swagger y corregir el error de consola
   c.header(
     "Content-Security-Policy",
     "default-src 'self'; " +
@@ -20,11 +22,10 @@ app.use("*", async (c, next) => {
     "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " + 
     "img-src 'self' data: https://aegistechmx.github.io https://raw.githubusercontent.com; " + 
     "font-src 'self' https://cdn.jsdelivr.net; " + 
-    "connect-src 'self';"
+    "connect-src 'self' https://cdn.jsdelivr.net;"
   );
 });
 
-// Configuración de OpenAPI
 const openapi = fromHono(app, {
   docs_url: "/",
   schema: {
@@ -37,7 +38,8 @@ const openapi = fromHono(app, {
   },
 });
 
-// --- REGISTRO DIRECTO (Soluciona Error 500 / basePath) ---
+// --- REGISTRO DE RUTAS ---
+// Usamos el registro directo para evitar errores de contexto
 openapi.get("/tasks", TaskList);
 openapi.post("/dummy/:slug", DummyEndpoint);
 

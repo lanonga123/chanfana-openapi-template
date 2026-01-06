@@ -1,11 +1,6 @@
+// src/endpoints/tasks/router.ts
 import { OpenAPIRoute } from "chanfana";
 import { z } from "zod";
-
-const TaskSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  completed: z.boolean(),
-});
 
 export class TaskList extends OpenAPIRoute {
   schema = {
@@ -14,16 +9,13 @@ export class TaskList extends OpenAPIRoute {
     responses: {
       "200": {
         description: "Ok",
-        content: { 
-          "application/json": { 
-            schema: z.object({ tasks: z.array(TaskSchema) }) 
-          } 
-        },
+        content: { "application/json": { schema: z.object({ tasks: z.array(z.any()) }) } },
       },
     },
   };
 
   async handle(c: any) {
-    return { tasks: [{ id: "1", title: "Task 1", completed: false }] };
+    // Si esto falla, el error 500 es por la base de datos
+    return { tasks: [] }; 
   }
 }
