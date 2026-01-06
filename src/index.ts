@@ -66,7 +66,7 @@ app.onError((err, c) => {
 
 // === RUTAS ===
 // === openapi.route("/tasks", tasksRouter);
-openapi.post("/dummy/:slug", DummyEndpoint);
+// === openapi.post("/dummy/:slug", DummyEndpoint);
 
 // === EXPORT ===
 export default app;
