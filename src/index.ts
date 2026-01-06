@@ -1,11 +1,11 @@
 import { fromHono } from "chanfana";
 import { Hono } from "hono";
-import { tasksRouter } from "./endpoints/tasks/router";
+import { TaskList } from "./endpoints/tasks/router"; // Importamos la clase directamente
 import { DummyEndpoint } from "./endpoints/dummyEndpoint";
 
 const app = new Hono();
 
-// === SEGURIDAD A+ CON TU HASH ===
+// === SEGURIDAD A+ (Tu Hash) ===
 app.use("*", async (c, next) => {
   await next();
   c.header("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
@@ -37,11 +37,11 @@ const openapi = fromHono(app, {
   },
 });
 
-// Registro de Rutas
-openapi.route("/tasks", tasksRouter);
+// === REGISTRO DIRECTO DE ENDPOINTS (Evita error basePath) ===
+openapi.get("/tasks", TaskList); // Registro directo
 openapi.post("/dummy/:slug", DummyEndpoint);
 
-// Si Chanfana falla, esta ruta manual servirá el JSON
+// Ruta manual para el JSON por si falla la auto-generación
 app.get("/openapi.json", (c) => {
   return c.json(openapi.getSchema());
 });
