@@ -20,13 +20,13 @@ app.use("*", async (c, next) => {
 
   // CSP ajustada para Swagger UI (necesita 'unsafe-inline' y 'unsafe-eval' por ahora)
   c.header("Content-Security-Policy",
-    "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
-    "style-src 'self' 'unsafe-inline'; " +
-    "img-src 'self' data: blob:; " +
-    "frame-ancestors 'self'; " +
-    "upgrade-insecure-requests"
-  );
+  "default-src 'self'; " +
+  "script-src 'self'; " +
+  "style-src 'self'; " +
+  "img-src 'self' data:; " +
+  "frame-ancestors 'self'; " +
+  "upgrade-insecure-requests"
+);
 
   // Upcoming headers (nivel experto)
   c.header("Cross-Origin-Embedder-Policy", "require-corp");
@@ -53,7 +53,7 @@ app.onError((err, c) => {
 });
 
 // === SETUP OPENAPI ===
-const openapi = fromHono(app, {
+// === const openapi = fromHono(app, {
   docs_url: "/",
   schema: {
     info: {
@@ -65,7 +65,7 @@ const openapi = fromHono(app, {
 });
 
 // === RUTAS ===
-openapi.route("/tasks", tasksRouter);
+// === openapi.route("/tasks", tasksRouter);
 openapi.post("/dummy/:slug", DummyEndpoint);
 
 // === EXPORT ===
