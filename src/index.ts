@@ -25,7 +25,7 @@ app.use("*", async (c, next) => {
   );
 });
 
-// Configuración de OpenAPI
+// Configuración de OpenAPI simplificada
 const openapi = fromHono(app, {
   docs_url: "/",
   schema: {
@@ -33,12 +33,11 @@ const openapi = fromHono(app, {
     info: {
       title: "AegisTech API",
       version: "1.0.0",
-      description: "![Logo](https://aegistechmx.github.io/images/logo-aegistech-dark.png)\n\n API Segura",
     },
   },
 });
 
-// REGISTRO DIRECTO - No uses .route() ni archivos intermedios de router
+// REGISTRO PLANO (Sin sub-routers)
 openapi.get("/tasks", TaskList);
 openapi.post("/dummy/:slug", DummyEndpoint);
 
