@@ -1,6 +1,6 @@
 import { fromHono } from "chanfana";
 import { Hono } from "hono";
-import { TaskList } from "./endpoints/tasks/router"; 
+import { TaskList } from "./endpoints/tasks/router"; // Importa la clase que me acabas de mostrar
 import { DummyEndpoint } from "./endpoints/dummyEndpoint"; 
 
 const app = new Hono();
@@ -24,6 +24,7 @@ app.use("*", async (c, next) => {
   );
 });
 
+// Configuración de OpenAPI
 const openapi = fromHono(app, {
   docs_url: "/",
   schema: {
@@ -36,7 +37,8 @@ const openapi = fromHono(app, {
   },
 });
 
-// --- REGISTRO DIRECTO (Para evitar el error de Cloudflare) ---
+// --- REGISTRO DIRECTO DE CLASES ---
+// Esto evita el error de "basePath" y el Error 500
 openapi.get("/tasks", TaskList);
 openapi.post("/dummy/:slug", DummyEndpoint);
 
