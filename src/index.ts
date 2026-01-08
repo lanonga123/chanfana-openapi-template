@@ -36,8 +36,9 @@ app.use("*", async (c, next) => {
   c.header(
     "Content-Security-Policy", 
     "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " + 
+    "script-src 'self' https://cdn.jsdelivr.net; " + 
     "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
+    "object-src 'none'; " +
     "img-src 'self' data: https://fastly.jsdelivr.net; " +
     "media-src 'self' *; " + // Permitir videos/audio de cualquier origen
     "frame-src 'self' *; " + // Permitir iframes (necesario para YouTube/Vimeo)
