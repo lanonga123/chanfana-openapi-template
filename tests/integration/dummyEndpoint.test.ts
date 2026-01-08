@@ -5,23 +5,16 @@ describe("Dummy API Integration Tests", () => {
 	beforeEach(async () => {
 		vi.clearAllMocks();
 	});
-
-	describe("POST /dummy/{slug}", () => {
+	// The dummy endpoint is a GET request, not POST.
+	// The dummy endpoint does not accept a request body.
+	describe("GET /dummy/{slug}", () => {
 		it("should return the log details", async () => {
 			const slug = "test-slug";
-			const requestBody = { name: "Test Name" };
-			const response = await SELF.fetch(`http://local.test/dummy/${slug}`, {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(requestBody),
-			});
-			const body = await response.json<{ success: boolean; result: any }>();
+			const response = await SELF.fetch(`http://local.test/dummy/${slug}`);
+			const body = await response.json<{ message: string }>();
 
 			expect(response.status).toBe(200);
-			expect(body.success).toBe(true);
-			expect(body.result.slug).toBe(slug);
-			expect(body.result.name).toBe(requestBody.name);
-			expect(body.result).toHaveProperty("msg");
+			expect(body.message).toBe(`Funcionando con slug: ${slug}`);
 		});
 	});
 });

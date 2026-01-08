@@ -10,7 +10,9 @@ export class TaskDelete extends OpenAPIRoute {
   };
 
   async handle(c: any) {
-    const { slug } = await c.req.valid("param");
+    const data = await this.getValidatedData<typeof this.schema>();
+    const { slug } = data.params;
+
     await c.env.DB.prepare("DELETE FROM tasks WHERE slug = ?").bind(slug).run();
     return { success: true };
   }

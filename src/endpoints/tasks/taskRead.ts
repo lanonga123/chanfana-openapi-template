@@ -11,7 +11,15 @@ export class TaskRead extends OpenAPIRoute {
         content: {
           "application/json": {
             schema: z.object({
-              tasks: z.array(z.any()),
+              success: z.boolean(),
+              result: z.array(z.object({
+                id: z.number(),
+                name: z.string(),
+                slug: z.string(),
+                description: z.string(),
+                completed: z.boolean(),
+                due_date: z.string(),
+              })),
             }),
           },
         },
@@ -21,6 +29,6 @@ export class TaskRead extends OpenAPIRoute {
 
   async handle(c: any) {
     const { results } = await c.env.DB.prepare("SELECT * FROM tasks").all();
-    return { tasks: results || [] };
+    return { success: true, result: results || [] };
   }
 }

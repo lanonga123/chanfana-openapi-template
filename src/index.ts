@@ -3,6 +3,7 @@ import { Hono } from "hono";
 import { TaskRead } from "./endpoints/tasks/taskRead";
 import { TaskCreate } from "./endpoints/tasks/taskCreate";
 import { TaskUpdate } from "./endpoints/tasks/taskUpdate";
+import { DummyEndpoint } from "./endpoints/dummyEndpoint";
 import { TaskDelete } from "./endpoints/tasks/taskDelete";
 
 const app = new Hono();
@@ -73,5 +74,6 @@ openapi.get("/tasks", TaskRead);
 openapi.post("/tasks", TaskCreate);
 openapi.put("/tasks/:slug", TaskUpdate);
 openapi.delete("/tasks/:slug", TaskDelete);
+openapi.get("/dummy/:slug", DummyEndpoint);
 
 export default app;

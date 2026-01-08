@@ -18,7 +18,7 @@ export default defineWorkersConfig({
 				singleWorker: true,
 				wrangler: {
 					configPath: "../wrangler.jsonc",
-				},
+				}, // This is where the error is.
 				miniflare: {
 					compatibilityFlags: ["experimental", "nodejs_compat"],
 					bindings: {

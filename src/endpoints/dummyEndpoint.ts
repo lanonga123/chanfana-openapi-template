@@ -1,12 +1,12 @@
 import { OpenAPIRoute } from "chanfana";
 import { z } from "zod";
 
-export class DummyEndpoint extends OpenAPIRoute {
+export class DummyEndpoint extends OpenAPIRoute<any> {
   schema = {
     tags: ["System"],
     summary: "Endpoint de prueba",
     request: {
-      params: z.object({ slug: z.string() }),
+      params: z.object({ slug: z.string().describe("Un slug de prueba") }),
     },
     responses: {
       "200": {
@@ -15,8 +15,8 @@ export class DummyEndpoint extends OpenAPIRoute {
       },
     },
   };
-  async handle(c: any) {
-    const data = await c.req.valid("param");
-    return { message: "Funcionando", slug: data.slug };
+  async handle(c) {
+    const { slug } = await this.getValidatedData();
+    return { message: `Funcionando con slug: ${slug}` };
   }
 }

@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS tasks (
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     name TEXT NOT NULL,
     slug TEXT NOT NULL,
-    description TEXT NOT NULL,
-    completed INTEGER NOT NULL,
-    due_date DATETIME NOT NULL
+    description TEXT,
+    completed INTEGER DEFAULT 0 NOT NULL,
+    due_date DATETIME
 );
