@@ -1,9 +1,9 @@
 {
-	"extends": "../tsconfig.json",
-	"compilerOptions": {
-		"moduleResolution": "bundler",
-		"types": ["@cloudflare/vitest-pool-workers"],
-		"isolatedModules": false
-	},
-	"include": ["./**/*.ts", "./**/*.mts"]
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "types": ["@cloudflare/vitest-pool-workers", "vitest/globals"],
+    "isolatedModules": false
+  },
+  "include": ["./**/*.ts", "./**/*.mts"]
 }
