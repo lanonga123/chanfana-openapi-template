@@ -21,7 +21,7 @@ describe("Task API Integration Tests", () => {
 		const response = await SELF.fetch(`http://local.test/tasks`);
 		const body = await response.json<{ success: boolean; result: any[] }>();
 		if (body.success && body.result.length > 0) {
-			const deletePromises = body.result.map((task) =>
+			const deletePromises = body.result.map((task: any) =>
 				SELF.fetch(`http://local.test/tasks/${task.slug}`, {
 					method: "DELETE",
 				}),
