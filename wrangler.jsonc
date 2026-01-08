@@ -12,8 +12,8 @@
   "site": {
     "bucket": "./public"
   }
-}
-{
+
+  ,
   "observability": {
     "enabled": false,
     "head_sampling_rate": 1,
@@ -29,4 +29,4 @@
       "head_sampling_rate": 1
     }
   }
-}   
+}
